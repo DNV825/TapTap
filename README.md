@@ -1,6 +1,6 @@
 # TapTap
 
-Raspberry pi Zero WHを利用し、タクトスイッチを押下するとリレータッチボードのOn/Offをループし、自動でスマホ画面をタップできる「自動スマホタップ装置」を作成する。
+Raspberry pi Zero WHを利用し、タクトスイッチを押下することでリレータッチボードのOn/Offをループする「自動スマホタップ装置」を作成する。
 また、シャットダウンするスイッチも用意する。
 
 ## Depencency
@@ -104,6 +104,7 @@ sudo /etc/rc.local
 
 1. @Gadgetoid, Raspberry Pi Pinout, Pinout.xyz, -, <https://pinout.xyz/>
 1. 福田 和宏, 特集1 モーターから小型画面まで電子パーツ450種最新ガイド, ラズパイマガジン 2021年春号/日経BP, 2021/02/27発行, ISBN 978-4-296-10855-8 <https://www.nikkeibp.co.jp/atclpubmkt/book/21/281660/>
+1. ちりつも, 【費用1793円】スマホ自動タップ装置の作り方, ちりつもぶろぐ, 2020/10/01, <https://chiritsumo-blog.com/auto-tap-machine/>
 1. shuichi, ラズパイ：タクトスイッチでPythonプログラムを動作させる, 人生は読めないブログ, 2020/08/16, <https://torisky.com/%E3%83%A9%E3%82%BA%E3%83%91%E3%82%A4%EF%BC%9A%E3%82%BF%E3%82%AF%E3%83%88%E3%82%B9%E3%82%A4%E3%83%83%E3%83%81%E3%81%A7python%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E3%82%92%E5%8B%95%E4%BD%9C/>
 1. @K-Ponta, Raspberry Pi 3 B+に シャットダウンスイッチを付ける, Qiita, 2019/04/14, <https://qiita.com/K-Ponta/items/12127d7077d69a82693c>
 1. 文系の伊藤さん, タクトスイッチは向きに注意, 文系の伊藤さんと電気の話, 2017/03/25, <https://ameblo.jp/bun-ito/entry-12259611903.html>
