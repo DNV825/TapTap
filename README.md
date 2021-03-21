@@ -1,51 +1,24 @@
 # TapTap
 
-スマホ自動タップ装置。
-
-スイッチを押すとtaptapするようにしたい。
-また、シャットダウンするスイッチもあると楽。
+Raspberry pi Zero WHを利用し、タクトスイッチを押下するとリレータッチボードのOn/Offをループし、自動でスマホ画面をタップできる「自動スマホタップ装置」を作成する。
+また、シャットダウンするスイッチも用意する。
 
 ## Depencency
 
 - [Node.js](https://nodejs.org/en/) 任意のバージョン
 - [rpi-gpio](https://www.npmjs.com/package/rpi-gpio) v2.1.7 以上（このリポジトリのnode_module配下に配置済み）
-
-ハード要件が必要。
+- [リレータッチボード（ドライバ有り）](https://www.switch-science.com/catalog/2455/) スイッチサイエンス社で販売されている、画面をタッチすることのできるボード。コード番号はSSCI-024556。
+- [初心者向けの学習キット ラズベリー・パイ３/２model B](https://www.amazon.co.jp/gp/product/B075167Y4D/) このセットに含まれているタクトスイッチと抵抗、ジャンパーワイヤーを利用する。商品の説明欄にチュートリアルのリンクが記載されており、そこから各パーツの説明書をまとめたものをダウンロードできる。
 
 ## Setup
 
-（記載中。ハードのセットアップを記載する。）
+まず、以下のように結線する（配線が重なり合わないように接続先を入れ替えてもかまわない。）
 
-```latex{cmd=true, hide=true}
-\documentclass{standalone}
-\usepackage[siunitx,american]{circuitikz}
-\begin{document}
-\begin{circuitikz}
-  \draw (0,0) to[R=2<\ohm>, i=?, v=84<\volt>]
-        (2,0) -- (2,2) to[V<=84<\volt>]
-        (0,2) -- (0,0);
-\end{circuitikz}
-\end{document}
-```
+パーツ「？」はスイッチサイエンス社の「リレータッチボード（ドライバ有り）」で、EN端子はPin16 = GPIO23を接続する。
 
-```latex{cmd=true hide=true}
-\documentclass{standalone}
-\usepackage[siunitx, RPvoltages]{circuitikz}
-\begin{document}
-\begin{circuitikz}
-  \ctikzset{multipoles/thickness=4}
-  \ctikzset{multipoles/external pins thickness=2}
-  \draw (0,0) node [dipchip,
-    num pins=12,
-    hide numbers,
-    external pins width=0.3,
-    external pad fraction=4](C){IC1};
-  \draw (C.pin 1) -- ++(-0.5,0) to[R] ++(0,-3)
-    node[ground]{};
-  \node[right, font=\tiny] at (C.bpin 1){RST};
-\end{circuitikz}
-\end{document}
-```
+タクトスイッチはPin18 = GPIO24、Pin22=GPIO25の2か所に接続し、GNDとは抵抗で接続する。抵抗の大きさは何でもよい（GNDが何ともつながっていないと動作が不安定になるそうなので、抵抗とGNDを接続する。）
+
+![TapTapのハード構成](./README-Setup.png)
 
 続いて、本リポジトリのファイルを任意の場所に配置する（例：/home/user01/TapTapに配置。）
 
@@ -90,7 +63,13 @@ sudo /etc/rc.local
 
 ## Usage
 
-（記載中。タクトスイッチ押下で動かす旨を記載する。）
+セットアップが完了すると、Raspberry pi Zero WHを起動することでスクリプトが起動し、タクトスイッチが有効になる。
+
+下図の通り、左側のタクトスイッチはシャットダウンボタンとなる。5秒以上ボタンを押し続けるとシャットダウンを実行する。
+
+右側のタクトスイッチは自動タップを行うボタンとなり、押下する度に自動タップの有効/無効をトグルする。
+
+![使い方](./README-Usage.png)
 
 ## License
 
@@ -121,13 +100,22 @@ sudo /etc/rc.local
 
 ## References
 
+ハード
+
 1. @Gadgetoid, Raspberry Pi Pinout, Pinout.xyz, -, <https://pinout.xyz/>
+1. 福田 和宏, 特集1 モーターから小型画面まで電子パーツ450種最新ガイド, ラズパイマガジン 2021年春号/日経BP, 2021/02/27発行, ISBN 978-4-296-10855-8 <https://www.nikkeibp.co.jp/atclpubmkt/book/21/281660/>
 1. shuichi, ラズパイ：タクトスイッチでPythonプログラムを動作させる, 人生は読めないブログ, 2020/08/16, <https://torisky.com/%E3%83%A9%E3%82%BA%E3%83%91%E3%82%A4%EF%BC%9A%E3%82%BF%E3%82%AF%E3%83%88%E3%82%B9%E3%82%A4%E3%83%83%E3%83%81%E3%81%A7python%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E3%82%92%E5%8B%95%E4%BD%9C/>
 1. @K-Ponta, Raspberry Pi 3 B+に シャットダウンスイッチを付ける, Qiita, 2019/04/14, <https://qiita.com/K-Ponta/items/12127d7077d69a82693c>
 1. 文系の伊藤さん, タクトスイッチは向きに注意, 文系の伊藤さんと電気の話, 2017/03/25, <https://ameblo.jp/bun-ito/entry-12259611903.html>
 1. サンダー, ブレッドボードの使い方【ブレッドボードでLEDを光らせてみよう】, THUNDER BLOG, 2020/05/28, <https://thunderblog.org/2019/03/bread_board.html>
 1. しなぷす, 【初心者向け】ブレッドボードとタクトスイッチで論理回路を作る(5), 京都しなぷすのハード制作日誌, 2020/05/14, <https://synapse.kyoto/hard/switch-logic/page005.html>
+
+JavaScript
+
 1. furoblog, 【JavaScript】日付処理で意識するべきこと, furoblog’s blog, 2019/04/25, <https://furoblog.hatenablog.com/entry/js-datediff>
 1. Carlos Delgado, How to shutdown and reboot Linux with Node.js, OUR CODE WORLD, 2017/03/14, <https://ourcodeworld.com/articles/read/411/how-to-shutdown-and-reboot-linux-with-node-js>
+
+Readme
+
 1. からあげ (id:karaage) , READMEの良さそうな書き方・テンプレート【GitHub/Bitbucket】, からあげ, 2018/01/19, <https://karaage.hatenadiary.jp/entry/2018/01/19/073000>
 1. matiassingers, Awesome README, github.com, 2020/02/28, <https://github.com/matiassingers/awesome-readme>
