@@ -5,26 +5,72 @@ Raspberry pi Zero WHを利用し、タクトスイッチを押下することで
 
 ## Depencency
 
+### Component dependency
+
+- [Raspberry Pi Zero WH](https://www.switch-science.com/catalog/3646/) リンクはスイッチサイエンス社の販売ページ。
+- [リレータッチボード（ドライバ有り）](https://www.switch-science.com/catalog/2455/) スイッチサイエンス社で販売されている、スマホ画面をタッチすることのできるボード。コード番号はSSCI-024556。
+- [初心者向けの学習キット ラズベリー・パイ３/２model B](https://www.amazon.co.jp/gp/product/B075167Y4D/) 商品の説明欄にチュートリアルのリンクが記載されており、そこから各パーツの説明書をまとめたものをダウンロードできる。利用するパーツは以下の通り。
+  - ブレッドボード x1
+  - ジャンパーワイヤー（オス-オス）x9
+  - ジャンパーワイヤー（オス-メス）x5
+  - タクトスイッチ x2
+  - 任意の抵抗 x2
+
+### Application dependency
+
 - [Node.js](https://nodejs.org/en/) 任意のバージョン
+- [n](https://www.npmjs.com/package/n) 任意のバージョン
 - [rpi-gpio](https://www.npmjs.com/package/rpi-gpio) v2.1.7 以上（このリポジトリのnode_module配下に配置済み）
-- [リレータッチボード（ドライバ有り）](https://www.switch-science.com/catalog/2455/) スイッチサイエンス社で販売されている、画面をタッチすることのできるボード。コード番号はSSCI-024556。
-- [初心者向けの学習キット ラズベリー・パイ３/２model B](https://www.amazon.co.jp/gp/product/B075167Y4D/) このセットに含まれているタクトスイッチと抵抗、ジャンパーワイヤーを利用する。商品の説明欄にチュートリアルのリンクが記載されており、そこから各パーツの説明書をまとめたものをダウンロードできる。
 
 ## Setup
 
+### Setup component
+
 まず、以下のように結線する（配線が重なり合わないように接続先を入れ替えてもかまわない。）
 
-パーツ「？」はスイッチサイエンス社の「リレータッチボード（ドライバ有り）」で、EN端子はPin16 = GPIO23を接続する。
+パーツ「？」はスイッチサイエンス社の「リレータッチボード（ドライバ有り）」で、EN端子はPin16 = GPIO23を接続する。ある程度リレータッチボードから離れた場所へ自由に動かせる余裕が欲しいので、ジャンパーワイヤー（オス-オス）と（オス-メス）を接続し、コードの長さを延長すると良い。
 
 タクトスイッチはPin18 = GPIO24、Pin22=GPIO25の2か所に接続し、GNDとは抵抗で接続する。抵抗の大きさは何でもよい（GNDが何ともつながっていないと動作が不安定になるそうなので、抵抗とGNDを接続する。）
 
 ![TapTapのハード構成](./README-Setup.png)
 
-続いて、本リポジトリのファイルを任意の場所に配置する（例：/home/user01/TapTapに配置。）
+### Setup application
 
-次に、起動時にスクリプトを実行させるため、/etc/rc.localを編集する。
+#### Install Node.js
 
-```cmd
+以下のようにコマンドを入力し、node.jsをインストールする。apt-getでインストールできるNode.jsは若干古いので、apt-getした後にNode.jsのバージョン管理ツール「n」を利用してNode.jsをバージョンアップする。
+
+```shell
+# apt-getでnode.jsをインストールする（同時にnpmもインストールしてくれる。）
+user1@pi0:~ $ sudo apt-get update
+user1@pi0:~ $ sudo apt-get install node.js
+
+# Node.jsのバージョン管理ツール「n」をインストールする。
+user1@pi0:~ $ sudo npm install n -g
+
+# Node.jsの安定版、LTS版のバージョンを確認する。
+user1@pi0:~ $ sudo n --stable
+user1@pi0:~ $ sudo n --lts
+
+# Node.jsの安定版、LTS版のどちらか一方をインストールする。好きな方をインストールすればよい。
+user1@pi0:~ $ sudo n lts
+
+# apt-getでインストールした古いNode.jsを削除する。
+user1@pi0:~ $ sudo apt-get purge node.js
+
+# いったんログアウトするか、exec $SHELL -lを実行し、そのあとにNode.jsのバージョンを確認して完了。
+user1@pi0:~ $ node -v
+```
+
+なお、Raspberry pi ZeroはCPUのアーキテクチャがARMv6のため、すでにNode.jsの最新版はサポート対象外となっている（参考：<https://qiita.com/Xperd/items/018df0bac4c1674b71ed>。）
+
+#### Run "TapTap"
+
+Node.jsをインストールした後に、本リポジトリのファイルを任意の場所に配置する（例：/home/user01/TapTapに配置。）
+
+そして、起動時にスクリプトを実行させるため、/etc/rc.localを編集する。
+
+```shell
 sudo vi /etc/rc.local
 ```
 
@@ -55,9 +101,9 @@ nohup node taptap.js &
 exit 0
 ```
 
-修正後、以下のコマンドでrc.localのエラーをチェックする。
+修正後、以下のコマンドでrc.localのエラーをチェックする。エラーが発生しなければ完了。
 
-```cmd
+```shell
 sudo /etc/rc.local
 ```
 
@@ -91,11 +137,13 @@ sudo /etc/rc.local
   0. You just DO WHAT THE FUCK YOU WANT TO.
 ```
 
+- [n](https://www.npmjs.com/package/n), [MIT Lisence](https://github.com/tj/n/blob/master/LICENSE)
 - [rpi-gpio](https://www.npmjs.com/package/rpi-gpio), [MIT Lisence](https://github.com/JamesBarwell/rpi-gpio.js/blob/master/MIT-LICENSE.txt)
 
 ## Authors
 
-- [TapTap](https://github.com/DNV825/tTpTap), DNV825
+- [TapTap](https://github.com/DNV825/TapTap), DNV825
+- [n](https://www.npmjs.com/package/n), tj / shadowspawn / ... [and many contributers](https://github.com/tj/n/graphs/contributors)
 - [rpi-gpio](https://www.npmjs.com/package/rpi-gpio),JamesBarwell / julienvincent / thecodershome / aslafy-z / pimterry / aztecrex / aleksipirttimaa / dawn-minion / andrewdotn / robertkowalski
 
 ## References
@@ -111,8 +159,9 @@ sudo /etc/rc.local
 1. サンダー, ブレッドボードの使い方【ブレッドボードでLEDを光らせてみよう】, THUNDER BLOG, 2020/05/28, <https://thunderblog.org/2019/03/bread_board.html>
 1. しなぷす, 【初心者向け】ブレッドボードとタクトスイッチで論理回路を作る(5), 京都しなぷすのハード制作日誌, 2020/05/14, <https://synapse.kyoto/hard/switch-logic/page005.html>
 
-JavaScript
+JavaScript/Node.js
 
+1. Naotsugu, Node のバージョン管理ツール n の使い方, A Memorandum, 2019/11/26, <https://blog1.mammb.com/entry/2019/11/26/090000>
 1. furoblog, 【JavaScript】日付処理で意識するべきこと, furoblog’s blog, 2019/04/25, <https://furoblog.hatenablog.com/entry/js-datediff>
 1. Carlos Delgado, How to shutdown and reboot Linux with Node.js, OUR CODE WORLD, 2017/03/14, <https://ourcodeworld.com/articles/read/411/how-to-shutdown-and-reboot-linux-with-node-js>
 
