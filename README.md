@@ -3,7 +3,7 @@
 Raspberry pi Zero WHを利用し、タクトスイッチを押下することでリレータッチボードのOn/Offをループする「自動スマホタップ装置」を作成する。
 また、シャットダウンするスイッチも用意する。
 
-## Depencency
+## Dependency
 
 ### Component dependency
 
